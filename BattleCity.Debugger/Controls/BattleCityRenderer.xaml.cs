@@ -14,12 +14,12 @@ namespace BattleCity.Debugger.Controls
             new Background(),
             new Borders(),
             new Constructions(),
+            new NavigationMap(),
             new AITanks(),
             new Enemies(),
             new Player(),
             new Bullets(),
             new Cooldowns(),
-            new NavigationMap()
         };
 
         public BattleCityRenderer()

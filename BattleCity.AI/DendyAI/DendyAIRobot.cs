@@ -14,13 +14,57 @@ namespace BattleCity.AI.DendyAI
             return Dead(gameState)
                 ?? BadRespawn(navigation)
                 ?? FindEnemy(navigation)
-                ?? Battle()
-                ?? NoAction();
+                ?? Battle(gameState, predicates, navigation);
         }
 
-        private RobotState Battle()
+        private RobotState Battle(GameState gameState, Predicates predicates, Navigation navigation)
         {
-            return new RobotState();
+            var robotState = new RobotState();
+
+            var theMostSafePosition = predicates.GetTheMostSafePosition();
+            var goToTheMostSafePosition = (theMostSafePosition - gameState.PlayerTank).ToCommand();
+
+            if (!predicates.IsReadyToFire)
+            {
+                if(predicates.IsUnderThreat(gameState.PlayerTank))
+                {
+                    robotState.Command = goToTheMostSafePosition;
+                }
+                else
+                {
+                    // if safe and not ready - do nothing
+                    return robotState;
+                }
+            }
+            else
+            {
+                if(predicates.HasEnemyTankOnRay(gameState.PlayerTank, Vector.FromDirection(gameState.PlayerTank.Direction)))
+                {
+                    robotState.Fire = Fire.FIRE_BEFORE_ACTION;
+                    robotState.Command = goToTheMostSafePosition;
+                }
+                else
+                {
+                    var direction = navigation.GoToTargetDirection().Value;
+
+                    if(predicates.IsUnderBulletThreat(gameState.PlayerTank) 
+                        || predicates.IsUnderBulletThreat(gameState.PlayerTank + direction))
+                    {
+                        robotState.Command = goToTheMostSafePosition;
+                    }
+                    else
+                    {
+                        robotState.Command = direction.ToCommand();
+                    }
+
+                    if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, direction))
+                    {
+                        robotState.Fire = Fire.FIRE_AFTER_ACTION;
+                    }
+                }
+            }
+
+            return robotState;
         }
 
         private RobotState FindEnemy(Navigation navigation)
@@ -51,11 +95,6 @@ namespace BattleCity.AI.DendyAI
                 return new RobotState();
             }
             return null;
-        }
-
-        private RobotState NoAction()
-        {
-            return new RobotState();
         }
     }
 }

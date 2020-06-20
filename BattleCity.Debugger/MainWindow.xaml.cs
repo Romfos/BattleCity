@@ -22,15 +22,15 @@ namespace BattleCity.Debugger
 
         public RobotState GetRobotState(GameState gameState)
         {
-            var robotState = battleCityRobot.GetRobotState(gameState);
-            Dispatcher.Invoke(() => HandleGameTick(gameState, robotState));
-            return robotState;
+            return Dispatcher.Invoke(() => HandleGameTick(gameState));
         }
 
-        private void HandleGameTick(GameState gameState, RobotState robotState)
+        private RobotState HandleGameTick(GameState gameState)
         {
+            var robotState = new RobotState();
             if (runtime.IsChecked == true)
             {
+                robotState = battleCityRobot.GetRobotState(gameState);
                 map.SetGameState(gameState);
             }
             if (record.IsChecked == true)
@@ -45,7 +45,17 @@ namespace BattleCity.Debugger
                     battleCityRobot.GetRobotState(gameState);
                 };
                 history.Children.Add(historyButton);
+
+                if(!gameState.PlayerTank.Alive)
+                {
+                    if(history.Children.Count > 6)
+                    {
+                        history.Children.RemoveRange(0,  history.Children.Count - 6);
+                    }
+                    record.IsChecked = false;
+                }
             }
+            return robotState;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)

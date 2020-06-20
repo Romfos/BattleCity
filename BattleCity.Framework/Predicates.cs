@@ -12,6 +12,8 @@ namespace BattleCity.Framework
             this.gameState = gameState;
         }
 
+        public bool IsReadyToFire => gameState.PlayerTank.FireCoolDown < 2;
+
         // basic
         public bool IsPlayer(Vector position) => position == gameState.PlayerTank;
         public bool IsEnemyTank(Vector position) => gameState.Enemies.Any(x => x == position && x.Alive);
@@ -23,18 +25,25 @@ namespace BattleCity.Framework
         // complex
         public bool IsEnemyOrAiTank(Vector position) => IsEnemyTank(position) || IsAiTank(position);
         public bool IsVisible(Vector position) => !IsBorder(position) && !IsConstruction(position);
-        public bool IsFree(Vector position) => IsVisible(position) && !IsEnemyTank(position);
+
+        public bool HasEnemyTankOnRay(Vector position, Vector direction) =>
+            Vector.Ray(position, direction).TakeWhile(IsVisible).ToList().Any(IsEnemyOrAiTank);
 
         public bool IsUnderBulletThreat(Vector position) => gameState.Bullets
             .Any(x => position == Vector.FromDirection(x.Direction) + x
                 || position == Vector.FromDirection(x.Direction) * 2 + x);
 
         public bool IsUnderEnemyTankThreat(Vector position) => gameState.Enemies.Concat(gameState.AiTanks)
-            .Where(x => new[] { 1, 2, 4 }.Contains(x.FireCoolDown))
+            .Where(x => x.FireCoolDown < 3)
             .SelectMany(tank => Vector.Directions.Select(direction => tank + direction)
                 .Concat(Vector.Directions.Select(direction => tank + direction * 2)))
                     .Any(x => position == x);
 
         public bool IsUnderThreat(Vector position) => IsUnderBulletThreat(position) || IsUnderEnemyTankThreat(position);
+
+        public Vector GetTheMostSafePosition() => Vector.Around(gameState.PlayerTank)
+            .Where(IsVisible)
+            .OrderBy(x => IsUnderBulletThreat(x) ? 2 : (IsUnderEnemyTankThreat(x) ? 1 : 0))
+            .First();
     }
 }

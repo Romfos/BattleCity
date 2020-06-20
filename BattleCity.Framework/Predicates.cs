@@ -24,5 +24,17 @@ namespace BattleCity.Framework
         public bool IsEnemyOrAiTank(Vector position) => IsEnemyTank(position) || IsAiTank(position);
         public bool IsVisible(Vector position) => !IsBorder(position) && !IsConstruction(position);
         public bool IsFree(Vector position) => IsVisible(position) && !IsEnemyTank(position);
+
+        public bool IsUnderBulletThreat(Vector position) => gameState.Bullets
+            .Any(x => position == Vector.FromDirection(x.Direction) + x
+                || position == Vector.FromDirection(x.Direction) * 2 + x);
+
+        public bool IsUnderEnemyTankThreat(Vector position) => gameState.Enemies.Concat(gameState.AiTanks)
+            .Where(x => new[] { 1, 2, 4 }.Contains(x.FireCoolDown))
+            .SelectMany(tank => Vector.Directions.Select(direction => tank + direction)
+                .Concat(Vector.Directions.Select(direction => tank + direction * 2)))
+                    .Any(x => position == x);
+
+        public bool IsUnderThreat(Vector position) => IsUnderBulletThreat(position) || IsUnderEnemyTankThreat(position);
     }
 }

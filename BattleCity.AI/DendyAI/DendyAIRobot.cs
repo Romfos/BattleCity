@@ -11,19 +11,19 @@ namespace BattleCity.AI.DendyAI
             var predicates = new Predicates(gameState);
             var navigation = new Navigation(gameState, predicates);
 
-            return HandleDeadState(gameState) 
-                ?? HandleBlockState(navigation)
-                ?? HandleFarEnemyState(navigation)
-                ?? HandleBattleState()
-                ?? new RobotState();
+            return Dead(gameState)
+                ?? BadRespawn(navigation)
+                ?? FindEnemy(navigation)
+                ?? Battle()
+                ?? NoAction();
         }
 
-        private RobotState HandleBattleState()
+        private RobotState Battle()
         {
             return new RobotState();
         }
 
-        private RobotState HandleFarEnemyState(Navigation navigation)
+        private RobotState FindEnemy(Navigation navigation)
         {
             if (navigation.GetStepCountToTarget() > 7)
             {
@@ -35,22 +35,27 @@ namespace BattleCity.AI.DendyAI
             return null;
         }
 
-        private RobotState HandleBlockState(Navigation navigation)
+        private RobotState BadRespawn(Navigation navigation)
         {
             if(!navigation.GoToTargetDirection().HasValue)
             {
-                return new RobotState { Fire = Fire.FIRE_BEFORE_ACTION };
+                return new RobotState { Fire = Fire.FIRE_AFTER_ACTION, Command = Commands.GO_TOP };
             }
             return null;
         }
 
-        private RobotState HandleDeadState(GameState gameState)
+        private RobotState Dead(GameState gameState)
         {
             if (!gameState.PlayerTank.Alive)
             {
                 return new RobotState();
             }
             return null;
+        }
+
+        private RobotState NoAction()
+        {
+            return new RobotState();
         }
     }
 }

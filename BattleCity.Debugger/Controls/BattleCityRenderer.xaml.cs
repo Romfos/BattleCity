@@ -21,6 +21,7 @@ namespace BattleCity.Debugger.Controls
             new Bullets(),
             new Cooldowns(),
             new Target(),
+            new DangerousZones(),
         };
 
         public BattleCityRenderer()

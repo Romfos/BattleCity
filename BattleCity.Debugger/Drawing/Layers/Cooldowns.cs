@@ -10,10 +10,12 @@ namespace BattleCity.Debugger.Drawing.Layers
 
         public override void Render(BattleCityDrawingContext context)
         {
+            var brush = Brushes.Cyan;
+
             context.DrawTileText(
                 context.GameState.PlayerTank.FireCoolDown.ToString(),
                 20,
-                Brushes.Yellow,
+                brush,
                 null,
                 context.GameState.PlayerTank.X,
                 context.GameState.PlayerTank.Y);
@@ -23,7 +25,7 @@ namespace BattleCity.Debugger.Drawing.Layers
                 context.DrawTileText(
                     tank.FireCoolDown.ToString(),
                     20,
-                    Brushes.Yellow,
+                    brush,
                     null,
                     tank.X,
                     tank.Y);
@@ -34,7 +36,7 @@ namespace BattleCity.Debugger.Drawing.Layers
                 context.DrawTileText(
                     tank.FireCoolDown.ToString(),
                     20,
-                    Brushes.Yellow,
+                    brush,
                     null,
                     tank.X,
                     tank.Y);

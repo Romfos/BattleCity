@@ -13,58 +13,39 @@ namespace BattleCity.AI.DendyAI
 
             return Dead(gameState)
                 ?? BadRespawn(navigation)
-                ?? TooFarFromEnemy(gameState, predicates, navigation)
-                ?? NotReadyToBattle(predicates)
-                ?? ReadyToBattle(gameState, predicates, navigation);
+                ?? FindEnemy(gameState, predicates, navigation)
+                ?? Battle(gameState, predicates, navigation);
         }
 
-        private RobotState ReadyToBattle(GameState gameState, Predicates predicates, Navigation navigation)
+        private RobotState Battle(GameState gameState, Predicates predicates, Navigation navigation)
         {
-            var robotState = new RobotState();
-
-
-            if (predicates.IsUnderBulletThreat(gameState.PlayerTank))
+            var robotState = new RobotState
             {
-                robotState.Command = predicates.GoToTheMostSafeDirection().ToCommand();
+                Command = predicates.GoToTheMostSafeDirection().ToCommand()
+            };
+
+            if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, Vector.FromDirection(gameState.PlayerTank.Direction)))
+            {
+                robotState.Fire = Fire.FIRE_BEFORE_ACTION;
             }
-            else
+
+            if(predicates.IsReadyToFire)
             {
-                if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, Vector.FromDirection(gameState.PlayerTank.Direction)))
+                var direction = navigation.GetTargetDirection();
+                if (!predicates.IsUnderThreat(gameState.PlayerTank + direction))
                 {
-                    robotState.Fire = Fire.FIRE_BEFORE_ACTION;
-                    robotState.Command = predicates.GoToTheMostSafeDirection().ToCommand(); ;
-                }
-
-                var direction = navigation.GetTargetDirection();                
-                if (predicates.IsUnderThreat(gameState.PlayerTank + direction))
-                {
-                    direction = predicates.GoToTheMostSafeDirection();
-                }
-                robotState.Command = direction.ToCommand();
-
-                if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, direction))
-                {
-                    robotState.Fire = Fire.FIRE_AFTER_ACTION;
-                }
+                    robotState.Command = direction.ToCommand();
+                    if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, direction))
+                    {
+                        robotState.Fire = Fire.FIRE_AFTER_ACTION;
+                    }
+                }                
             }
 
             return robotState;
         }
 
-        private RobotState NotReadyToBattle(Predicates predicates)
-        {
-            if (!predicates.IsReadyToFire)
-            {
-                return new RobotState
-                {
-                    Command = predicates.GoToTheMostSafeDirection().ToCommand()
-                };
-            }
-
-            return null;
-        }
-
-        private RobotState TooFarFromEnemy(GameState gameState, Predicates predicates, Navigation navigation)
+        private RobotState FindEnemy(GameState gameState, Predicates predicates, Navigation navigation)
         {
             if (navigation.GetStepCountToTarget() > 5)
             {

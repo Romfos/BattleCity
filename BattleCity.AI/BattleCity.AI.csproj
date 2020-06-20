@@ -8,8 +8,4 @@
     <ProjectReference Include="..\BattleCity.Framework\BattleCity.Framework.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Stub\" />
-  </ItemGroup>
-
 </Project>

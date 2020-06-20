@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleCity.AI", "BattleCity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleCity.Debugger", "BattleCity.Debugger\BattleCity.Debugger.csproj", "{E606C6E4-63B0-4AE6-9FB9-C5D8B4B44B93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleCity.Service", "BattleCity.Service\BattleCity.Service.csproj", "{F7E3023B-2806-4EEB-978E-3943A7FF6A9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleCity.Service", "BattleCity.Service\BattleCity.Service.csproj", "{F7E3023B-2806-4EEB-978E-3943A7FF6A9A}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6FB3FDB5-D8D2-41EF-B70A-8DA0E7036960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{F7E3023B-2806-4EEB-978E-3943A7FF6A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7E3023B-2806-4EEB-978E-3943A7FF6A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7E3023B-2806-4EEB-978E-3943A7FF6A9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FB3FDB5-D8D2-41EF-B70A-8DA0E7036960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FB3FDB5-D8D2-41EF-B70A-8DA0E7036960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FB3FDB5-D8D2-41EF-B70A-8DA0E7036960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FB3FDB5-D8D2-41EF-B70A-8DA0E7036960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BattleCity.Service": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

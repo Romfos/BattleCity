@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  battlecity.service:
+    image: battlecityservice
+    restart: always
+    build:
+      context: .
+      dockerfile: BattleCity.Service\Dockerfile

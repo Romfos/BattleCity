@@ -7,6 +7,7 @@ namespace BattleCity.Framework
 {
     public struct Vector
     {
+        public static Vector Empty { get; } = new Vector(0, 0);
         public static Vector Up { get; } = new Vector(0, 1);
         public static Vector Down { get; } = new Vector(0, -1);
         public static Vector Right { get; } = new Vector(1, 0);
@@ -79,6 +80,10 @@ namespace BattleCity.Framework
             if (this == Right)
             {
                 return Commands.GO_RIGHT;
+            }
+            if(this == Empty)
+            {
+                return default;
             }
             throw new NotImplementedException();
         }

@@ -23,7 +23,7 @@ namespace BattleCity.Framework
 
         public int? GetStepCountToTarget() => Target.HasValue ? Target.Value.Value.Count : (int?)null;
 
-        public Vector? GoToTargetDirection() => Target.HasValue ? Target.Value.Value.First() - gameState.PlayerTank : (Vector?)null;
+        public Vector GetTargetDirection() => Target.Value.Value.First() - gameState.PlayerTank;
 
         private KeyValuePair<Vector, ImmutableList<Vector>>? GetTarget() => Map
             .Where(x => predicates.IsEnemyTank(x.Key))

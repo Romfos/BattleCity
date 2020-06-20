@@ -15,7 +15,7 @@ namespace BattleCity.Debugger.Drawing.Layers
 
             foreach (var steps in navigation.Map)
             {
-                if(steps.Value.Count < 7)
+                if(steps.Value.Count < 5)
                 {
                     context.DrawTileText(
                         steps.Value.Count.ToString(),

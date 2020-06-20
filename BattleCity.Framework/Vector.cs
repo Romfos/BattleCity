@@ -1,10 +1,9 @@
 ﻿using BattleCity.Client.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
-namespace BattleCity.Framework.Primitives
+namespace BattleCity.Framework
 {
     public struct Vector
     {
@@ -13,7 +12,7 @@ namespace BattleCity.Framework.Primitives
         public static Vector Right { get; } = new Vector(1, 0);
         public static Vector Left { get; } = new Vector(-1, 0);
 
-        public static ImmutableArray<Vector> Directions { get; } = ImmutableArray.Create(Up, Down, Left, Right);
+        public static Vector[] Directions { get; } = { Up, Down, Left, Right };
 
         public static Vector FromDirection(string direction) => direction switch
         {
@@ -33,10 +32,7 @@ namespace BattleCity.Framework.Primitives
             }
         }
 
-        public static IEnumerable<Vector> Around(Vector position)
-        {
-            return Directions.Select(x => x + position);
-        }
+        public static IEnumerable<Vector> Around(Vector position) => Directions.Select(x => x + position);
 
         public int X { get; set; }
         public int Y { get; set; }

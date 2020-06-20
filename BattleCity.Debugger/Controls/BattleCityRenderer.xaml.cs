@@ -18,7 +18,8 @@ namespace BattleCity.Debugger.Controls
             new Enemies(),
             new Player(),
             new Bullets(),
-            new Cooldowns()
+            new Cooldowns(),
+            new NavigationMap()
         };
 
         public BattleCityRenderer()

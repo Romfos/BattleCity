@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BattleCity.Client\BattleCity.Client.csproj" />
     <ProjectReference Include="..\BattleCity.Framework\BattleCity.Framework.csproj" />
   </ItemGroup>
 

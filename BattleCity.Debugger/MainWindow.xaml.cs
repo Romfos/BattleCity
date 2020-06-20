@@ -1,6 +1,7 @@
 ﻿using BattleCity.AI.DendyAI;
 using BattleCity.Client;
 using BattleCity.Client.Models;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,7 +16,12 @@ namespace BattleCity.Debugger
         {
             InitializeComponent();
 
-            var connectionString = "http://battlecity.godeltech.com/codenjoy-contest/board/player/bcxjamqy6zk30w5o4up4?code=4120728259014700513&gameName=battlecity";
+            var connectionString = Environment.GetEnvironmentVariable("url");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                connectionString = "http://battlecity.godeltech.com/codenjoy-contest/board/player/bcxjamqy6zk30w5o4up4?code=4120728259014700513&gameName=battlecity";
+            }
+
             battleCityClient = new BattleCityClient(connectionString, this);
             battleCityRobot = new DendyAIRobot();
         }

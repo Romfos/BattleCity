@@ -25,26 +25,22 @@ namespace BattleCity.AI.DendyAI
 
             if (predicates.IsUnderBulletThreat(gameState.PlayerTank))
             {
-                robotState.Command = predicates.GoToTheMostSafePosition();
+                robotState.Command = predicates.GoToTheMostSafeDirection().ToCommand();
             }
             else
             {
                 if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, Vector.FromDirection(gameState.PlayerTank.Direction)))
                 {
                     robotState.Fire = Fire.FIRE_BEFORE_ACTION;
-                    robotState.Command = predicates.GoToTheMostSafePosition();
+                    robotState.Command = predicates.GoToTheMostSafeDirection().ToCommand(); ;
                 }
 
-                var direction = navigation.GetTargetDirection();
-
-                if (predicates.IsUnderBulletThreat(gameState.PlayerTank + direction))
+                var direction = navigation.GetTargetDirection();                
+                if (predicates.IsUnderThreat(gameState.PlayerTank + direction))
                 {
-                    robotState.Command = predicates.GoToTheMostSafePosition();
+                    direction = predicates.GoToTheMostSafeDirection();
                 }
-                else
-                {
-                    robotState.Command = direction.ToCommand();
-                }
+                robotState.Command = direction.ToCommand();
 
                 if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, direction))
                 {
@@ -61,7 +57,7 @@ namespace BattleCity.AI.DendyAI
             {
                 return new RobotState
                 {
-                    Command = predicates.GoToTheMostSafePosition()
+                    Command = predicates.GoToTheMostSafeDirection().ToCommand()
                 };
             }
 
@@ -78,7 +74,7 @@ namespace BattleCity.AI.DendyAI
                 {
                     return new RobotState
                     {
-                        Command = predicates.GoToTheMostSafePosition()
+                        Command = predicates.GoToTheMostSafeDirection().ToCommand()
                     };
                 }
                 else

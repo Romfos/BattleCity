@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   battlecity.service:
+    isolation: "process"
     image: battlecityservice
     restart: always
     build:

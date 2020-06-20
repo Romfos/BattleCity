@@ -13,57 +13,40 @@ namespace BattleCity.AI.DendyAI
 
             return Dead(gameState)
                 ?? BadRespawn(navigation)
-                ?? FindEnemy(gameState, predicates, navigation)
                 ?? Battle(gameState, predicates, navigation);
         }
 
         private RobotState Battle(GameState gameState, Predicates predicates, Navigation navigation)
         {
-            var robotState = new RobotState
-            {
-                Command = predicates.GetTheMostSafeDirection().ToCommand()
-            };
+            var robotState = new RobotState();
 
             if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, Vector.FromDirection(gameState.PlayerTank.Direction)))
             {
                 robotState.Fire = Fire.FIRE_BEFORE_ACTION;
             }
 
-            if(predicates.IsReadyToFire)
+            var direction = GetBattleMoveDirection(gameState, predicates, navigation);
+            if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, direction))
             {
-                var direction = navigation.GetTargetDirection();
-                if (!predicates.IsUnderThreat(gameState.PlayerTank + direction))
-                {
-                    robotState.Command = direction.ToCommand();
-                    if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, direction))
-                    {
-                        robotState.Fire = Fire.FIRE_AFTER_ACTION;
-                    }
-                }                
+                robotState.Fire = Fire.FIRE_AFTER_ACTION;
             }
+
+            robotState.Command = direction.ToCommand();
 
             return robotState;
         }
 
-        private RobotState FindEnemy(GameState gameState, Predicates predicates, Navigation navigation)
+        private Vector GetBattleMoveDirection(GameState gameState, Predicates predicates, Navigation navigation)
         {
-            if (navigation.GetStepCountToTarget() > 5)
+            var direction = navigation.GetTargetDirection();
+            if (!predicates.IsUnderThreat(gameState.PlayerTank + direction) && predicates.IsReadyToFire)
             {
-                var direction = navigation.GetTargetDirection();
-
-                var robotState = new RobotState
-                {
-                    Command = direction.ToCommand()
-                };
-
-                if (predicates.IsUnderBulletThreat(gameState.PlayerTank + direction))
-                {
-                    robotState.Command = predicates.GetTheMostSafeDirection().ToCommand();
-                }
-
-                return robotState;
+                return direction;
             }
-            return null;
+            else
+            {
+                return predicates.GetTheMostSafeDirection();
+            }
         }
 
         private RobotState BadRespawn(Navigation navigation)

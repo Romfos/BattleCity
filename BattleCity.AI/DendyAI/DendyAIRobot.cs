@@ -21,7 +21,7 @@ namespace BattleCity.AI.DendyAI
         {
             var robotState = new RobotState
             {
-                Command = predicates.GoToTheMostSafeDirection().ToCommand()
+                Command = predicates.GetTheMostSafeDirection().ToCommand()
             };
 
             if (predicates.HasEnemyTankOnRay(gameState.PlayerTank, Vector.FromDirection(gameState.PlayerTank.Direction)))
@@ -50,21 +50,18 @@ namespace BattleCity.AI.DendyAI
             if (navigation.GetStepCountToTarget() > 5)
             {
                 var direction = navigation.GetTargetDirection();
-                if (predicates.IsUnderBulletThreat(gameState.PlayerTank) 
-                    || predicates.IsUnderBulletThreat(gameState.PlayerTank + direction))
+
+                var robotState = new RobotState
                 {
-                    return new RobotState
-                    {
-                        Command = predicates.GoToTheMostSafeDirection().ToCommand()
-                    };
-                }
-                else
+                    Command = direction.ToCommand()
+                };
+
+                if (predicates.IsUnderBulletThreat(gameState.PlayerTank + direction))
                 {
-                    return new RobotState
-                    {
-                        Command = direction.ToCommand()
-                    };
+                    robotState.Command = predicates.GetTheMostSafeDirection().ToCommand();
                 }
+
+                return robotState;
             }
             return null;
         }

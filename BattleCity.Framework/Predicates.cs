@@ -54,10 +54,13 @@ namespace BattleCity.Framework
             || IsUnderEnemyTankThreat(position) 
             || IsUnderAiTankThreat(position);
 
-        public Vector GoToTheMostSafeDirection() => Vector.Around(gameState.PlayerTank)
+        public Vector GetTheMostSafeDirection() => Vector.Around(gameState.PlayerTank)
             .Concat(new Vector[] { gameState.PlayerTank })
             .Where(IsFree)
-            .OrderBy(x => IsUnderBulletThreat(x) ? 3 : (IsUnderEnemyTankThreat(x) ? 2 : (IsUnderAiTankThreat(x) ? 1 : 0)))
+            .OrderBy(x => IsUnderBulletThreat(x) ? 3
+                : IsUnderEnemyTankThreat(x) ? 2
+                : IsUnderAiTankThreat(x) ? 1
+                : 0)
             .Select(x => x - gameState.PlayerTank)
             .First();
     }

@@ -5,7 +5,7 @@ namespace BattleCity.Debugger.Drawing.Layers
 {
     public class NavigationMap : BattleCityLayer
     {
-        public override bool Enabled { get; set; } = false;
+        public override bool Enabled { get; set; } = true;
         public override string Name { get; } = "Navigation map";
 
         public override void Render(BattleCityDrawingContext context)

@@ -20,6 +20,7 @@ namespace BattleCity.Debugger.Controls
             new Player(),
             new Bullets(),
             new Cooldowns(),
+            new Target(),
         };
 
         public BattleCityRenderer()

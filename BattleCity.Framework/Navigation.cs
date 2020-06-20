@@ -7,21 +7,28 @@ namespace BattleCity.Framework
 {
     public class Navigation
     {
+        private readonly GameState gameState;
         private readonly Predicates predicates;
 
         public Dictionary<Vector, ImmutableList<Vector>> Map { get; set; }
+        public KeyValuePair<Vector, ImmutableList<Vector>>? Target { get; set; }
 
         public Navigation(GameState gameState, Predicates predicates)
         {
+            this.gameState = gameState;
             this.predicates = predicates;
             Map = CreateStepMap(gameState.PlayerTank);
+            Target = GetTarget();
         }
 
-        public Vector? GetStepToNearestEnemy() => Map
-            .Where(x => predicates.IsEnemy(x.Key))
+        public int? GetStepCountToTarget() => Target.HasValue ? Target.Value.Value.Count : (int?)null;
+
+        public Vector? GoToTargetDirection() => Target.HasValue ? Target.Value.Value.First() - gameState.PlayerTank : (Vector?)null;
+
+        private KeyValuePair<Vector, ImmutableList<Vector>>? GetTarget() => Map
+            .Where(x => predicates.IsEnemyTank(x.Key))
             .OrderBy(x => x.Value.Count)
             .Take(1)
-            .Select(x => (Vector?)x.Value.First())
             .FirstOrDefault();
 
         private Dictionary<Vector, ImmutableList<Vector>> CreateStepMap(Vector position)

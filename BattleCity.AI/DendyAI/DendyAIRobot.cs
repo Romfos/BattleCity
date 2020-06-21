@@ -45,14 +45,14 @@ namespace BattleCity.AI.DendyAI
                 return direction;
             }
 
-            direction = predicates.GetTheMostSafeDirection();
+            var safedirection = predicates.GetTheMostSafeDirection();
 
-            if (predicates.IsUnderThreat(gameState.PlayerTank + direction))
+            if (predicates.IsUnderThreat(gameState.PlayerTank + safedirection))
             {
                 return direction;
             }
             
-            return direction;
+            return safedirection;
         }
 
         private RobotState BadRespawn(Navigation navigation)

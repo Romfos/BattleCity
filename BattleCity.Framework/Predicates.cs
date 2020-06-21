@@ -27,8 +27,9 @@ namespace BattleCity.Framework
         public bool IsVisible(Vector position) => !IsBorder(position) && !IsConstruction(position);
         public bool IsFree(Vector position) => IsVisible(position) && !IsEnemyTank(position);
 
-        public bool HasEnemyTankOnRay(Vector position, Vector direction) =>
-            Vector.Ray(position, direction).TakeWhile(IsVisible).ToList().Any(IsEnemyOrAiTank);
+        public bool HasEnemyTankOnRay(Vector position, Vector direction) => direction == Vector.Empty 
+            ? false 
+            : Vector.Ray(position, direction).TakeWhile(IsVisible).ToList().Any(IsEnemyOrAiTank);
 
         public bool IsUnderBulletThreat(Vector position) => gameState.Bullets
             .Any(x => position == x 
@@ -38,14 +39,16 @@ namespace BattleCity.Framework
 
         public bool IsUnderAiTankThreat(Vector position) => gameState.AiTanks
             .Where(x => x.FireCoolDown < 2)
-            .SelectMany(tank => Vector.Directions.Select(direction => tank + direction)
+            .SelectMany(tank => new Vector[] { tank }
+                .Concat(Vector.Directions.Select(direction => tank + direction))
                 .Concat(Vector.Directions.Select(direction => tank + direction * 2))
                 .Concat(Vector.Directions.Select(direction => tank + direction * 3)))
                     .Any(x => position == x);
 
         public bool IsUnderEnemyTankThreat(Vector position) => gameState.Enemies
             .Where(x => x.FireCoolDown < 2)
-            .SelectMany(tank => Vector.Directions.Select(direction => tank + direction)
+            .SelectMany(tank => new Vector[] { tank }
+                .Concat(Vector.Directions.Select(direction => tank + direction))
                 .Concat(Vector.Directions.Select(direction => tank + direction * 2))
                 .Concat(Vector.Directions.Select(direction => tank + direction * 3)))
                     .Any(x => position == x);
@@ -54,8 +57,8 @@ namespace BattleCity.Framework
             || IsUnderEnemyTankThreat(position) 
             || IsUnderAiTankThreat(position);
 
-        public Vector GetTheMostSafeDirection() => Vector.Around(gameState.PlayerTank)
-            .Concat(new Vector[] { gameState.PlayerTank })
+        public Vector GetTheMostSafeDirection() => new Vector[] { gameState.PlayerTank }
+            .Concat(Vector.Around(gameState.PlayerTank))
             .Where(IsFree)
             .OrderBy(x => IsUnderBulletThreat(x) ? 3
                 : IsUnderEnemyTankThreat(x) ? 2

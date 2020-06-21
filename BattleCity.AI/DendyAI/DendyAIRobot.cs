@@ -38,15 +38,14 @@ namespace BattleCity.AI.DendyAI
 
         private Vector GetBattleMoveDirection(GameState gameState, Predicates predicates, Navigation navigation)
         {
-            var direction = navigation.GetTargetDirection();
-            if (!predicates.IsUnderThreat(gameState.PlayerTank + direction) && predicates.IsReadyToFire)
+            var direction = navigation.GetTargetDirection();            
+
+            if(!predicates.IsUnderThreat(gameState.PlayerTank + direction))
             {
                 return direction;
             }
-            else
-            {
-                return predicates.GetTheMostSafeDirection();
-            }
+
+            return predicates.GetTheMostSafeDirection();
         }
 
         private RobotState BadRespawn(Navigation navigation)

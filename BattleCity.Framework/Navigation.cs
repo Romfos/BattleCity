@@ -21,7 +21,7 @@ namespace BattleCity.Framework
             Target = GetTarget();
         }
 
-        public int? GetStepCountToTarget() => Target.HasValue ? Target.Value.Value.Count : (int?)null;
+        public int? GetStepCountToTarget() => Target.HasValue ? Target.Value.Value?.Count : null;
 
         public Vector GetTargetDirection() => Target.Value.Value.First() - gameState.PlayerTank;
 

@@ -13,7 +13,7 @@ namespace BattleCity.Debugger.Drawing.Layers
             var predicates = new Predicates(context.GameState);
             var navigation = new Navigation(context.GameState, predicates);
 
-            if(navigation.Target == null)
+            if(navigation.Target?.Value == null)
             {
                 return;
             }

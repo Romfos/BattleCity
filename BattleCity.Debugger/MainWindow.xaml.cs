@@ -42,7 +42,14 @@ namespace BattleCity.Debugger
             if (record.IsChecked == true)
             {
                 var historyButton = new Button();
-                var command = robotState.Command == default ? "none" : robotState.Command.ToString();
+                var command = robotState.Command switch
+                {
+                    Commands.GO_LEFT => "Left",
+                    Commands.GO_TOP => "Top",
+                    Commands.GO_RIGHT => "Right",
+                    Commands.GO_DOWN => "Down",
+                    _ => "None"
+                };
                 var tempalte = robotState.Fire switch
                 {
                     Fire.FIRE_BEFORE_ACTION => "Fire + {0}",

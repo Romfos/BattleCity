@@ -38,7 +38,7 @@ namespace BattleCity.Framework
                 || position == Vector.FromDirection(x.Direction) * 3 + x);
 
         public bool IsUnderAiTankThreat(Vector position) => gameState.AiTanks
-            .Where(x => x.FireCoolDown < 2)
+            .Where(x => x.FireCoolDown < 3)
             .SelectMany(tank => new Vector[] { tank }
                 .Concat(Vector.Directions.Select(direction => tank + direction))
                 .Concat(Vector.Directions.Select(direction => tank + direction * 2))
@@ -46,7 +46,7 @@ namespace BattleCity.Framework
                     .Any(x => position == x);
 
         public bool IsUnderEnemyTankThreat(Vector position) => gameState.Enemies
-            .Where(x => x.FireCoolDown < 2)
+            .Where(x => x.FireCoolDown < 3)
             .SelectMany(tank => new Vector[] { tank }
                 .Concat(Vector.Directions.Select(direction => tank + direction))
                 .Concat(Vector.Directions.Select(direction => tank + direction * 2))

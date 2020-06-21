@@ -42,7 +42,16 @@ namespace BattleCity.Debugger
             if (record.IsChecked == true)
             {
                 var historyButton = new Button();
-                historyButton.Content = $"{history.Children.Count + 1}, {robotState.Command} {robotState.Fire}";
+                var command = robotState.Command == default ? "none" : robotState.Command.ToString();
+                var tempalte = robotState.Fire switch
+                {
+                    Fire.FIRE_BEFORE_ACTION => "Fire + {0}",
+                    Fire.FIRE_AFTER_ACTION => "{0} + Fire",
+                    _ => "{0}",
+                };
+                historyButton.Content = string.Format(tempalte, command);
+
+                historyButton.HorizontalContentAlignment = HorizontalAlignment.Left;
                 historyButton.Click += (a, b) =>
                 {
                     runtime.IsChecked = false;
